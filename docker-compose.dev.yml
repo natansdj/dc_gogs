@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  #######################################
+  # GOGS
+  #######################################
+  gogs:
+    image: gogs/gogs
+    container_name: gogs
+    external_links:
+      # - dev_postgres:postgres
+      - dev_mysql:mysql
+    networks:
+      - default
+    ports:
+      - "8300:3000"
+      - "8322:22"
+    volumes:
+      - /home/lxc/gogs/data:/data
+    # cap and privileged needed for slowlog
+    cap_add:
+      - SYS_PTRACE
+    privileged: true
+    mem_limit: 1500m
+    environment:
+      VIRTUAL_HOST: "gogs.vm"
+      VIRTUAL_PORT: "3000"
+#    restart: always
+    networks:
+      default:
+        ipv4_address: 172.18.0.200
+
+networks:
+  default:
+    external:
+      name: dev
